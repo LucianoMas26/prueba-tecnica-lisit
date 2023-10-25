@@ -11,7 +11,7 @@ export default function Navbar() {
           <div>
             <img src={logo} alt="" className="w-[7rem]" />
           </div>
-          <div>
+          {/* <div>
             <ul className="flex space-x-4">
               <li className="text-white">
                 <NavLink to="/">Home</NavLink>
@@ -26,7 +26,7 @@ export default function Navbar() {
                 <NavLink to="/starships">Starships</NavLink>
               </li>
             </ul>
-          </div>
+          </div> */}
 
           <SearchBar />
         </div>

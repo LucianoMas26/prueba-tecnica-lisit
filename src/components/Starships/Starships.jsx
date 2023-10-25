@@ -1,48 +1,69 @@
-import React, { useEffect, useState } from "react"
-import { fetchStarships } from "../../api/starships"
-import starshipBg from "../../images/starships-bg.jpg"
-import { starshipImages } from "../../helpers/images"
-import styles from "./Starship.module.css"
+import { useState, useEffect } from "react"
+import Pagination from "../Pagination/Pagination"
+import cardImage from "../../images/starwars-card.jpg"
+import Loading from "../../images/starwars-loading.gif"
+import { fetchAllStarships } from "../../api/services/starships"
+
 export const Starships = () => {
   const [starships, setStarships] = useState([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    fetchStarships()
-      .then((response) => {
-        const starshipsData = response.data
-        setStarships(starshipsData.results)
-      })
-      .catch((error) => {
-        console.error("Error while fetching starships data:", error)
-      })
+    const fetchData = async () => {
+      try {
+        const allStarshipsData = await fetchAllStarships()
+        setStarships(allStarshipsData)
+        setLoading(false)
+      } catch (error) {
+        console.error("Error fetching starships:", error)
+        setLoading(false)
+      }
+    }
+
+    fetchData()
   }, [])
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page)
+  }
+
+  const startIndex = (currentPage - 1) * 4
+  const endIndex = startIndex + 4
+  const pageStarships = starships.slice(startIndex, endIndex)
+
   return (
-    <div
-      className="bg-cover bg-center bg-no-repeat min-h-screen relative"
-      style={{ backgroundImage: `url(${starshipBg})` }}
-    >
-      <div className="pt-16 text-white ">
-        <ul className="grid grid-cols-4 gap-10 px-12 mt-[2rem]">
-          {starships.slice(0, 4).map((starship) => (
-            <li
-              key={starship.name}
-              className="relative text-center -skew-x-12 brightness-75 hover:shadow-lg hover:brightness-90 duration-300 ease-in-out "
-            >
-              <img
-                src={starshipImages[starship.name]}
-                alt={starship.name}
-                className="w-full h-[25rem] object-cover rounded-xl shadow-lg"
-              />
-              <h3 className="text-white absolute top-4 left-0 w-full skew-x-12 uppercase text-xl px-2">
-                {starship.name}
-              </h3>
-              <p className="text-[#49c8eb] absolute bottom-4 left-0 w-full skew-x-12">
-                {starship.cost_in_credits}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <div>
+      {loading ? (
+        <div className="w-full flex justify-center items-center">
+          <img src={Loading} alt="" className="w-[13rem]" />
+        </div>
+      ) : (
+        <div>
+          <ul className="grid grid-cols-4 gap-16 px-12 mt-[2rem]">
+            {pageStarships.map((starship, index) => (
+              <div
+                key={starship.name + index}
+                className=" -skew-x-12 rounded-xl bg-opacity-50 text-white relative p-4 hover:shadow-lg hover:brightness-90 duration-300 ease-in-out w-full h-[14rem] bg-center bg-cover"
+                style={{ backgroundImage: `url(${cardImage})` }}
+              >
+                <h3 className="text-white  absolute top-4 left-0 w-full skew-x-12 uppercase text-lg px-4 text-center">
+                  {starship.name}
+                </h3>
+                <p className="text-[#49c8eb] absolute bottom-4 left-0 skew-x-12 text-center w-full">
+                  {starship.cost_in_credits}
+                </p>
+              </div>
+            ))}
+          </ul>
+          <Pagination
+            currentPage={currentPage}
+            totalPages={Math.ceil(starships.length / 4)}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
     </div>
   )
 }
