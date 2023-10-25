@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import landingImage from "../../images/starwars-landing.jpg"
 import { Categories } from "../Categories/Categories"
 import { Starships } from "../Starships/Starships"
+import { People } from "../People/People"
 
 export const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState("People")
@@ -23,6 +24,7 @@ export const Home = () => {
         </div>
         <div className="absolute top-[60%] left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full">
           {selectedCategory === "Starships" && <Starships currentPage={1} />}
+          {selectedCategory === "People" && <People currentPage={1} />}
         </div>
       </div>
     </main>

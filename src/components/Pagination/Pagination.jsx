@@ -2,31 +2,21 @@ import React from "react"
 import { BiSolidLeftArrow, BiSolidRightArrow } from "react-icons/bi"
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  const handlePrevPage = () => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1)
-    }
-  }
-
-  const handleNextPage = () => {
-    if (currentPage < totalPages) {
-      onPageChange(currentPage + 1)
-    }
-  }
-
   return (
     <div className="flex justify-center mt-6 gap-10">
       <button
-        className="bg-[#369fbd] text-white p-4 rounded-full hover:bg-[#49c8eb] duration-300 ease-in-out"
-        onClick={handlePrevPage}
+        className="bg-[#369fbd] text-white px-4 py-2 rounded-xl hover:bg-[#49c8eb] duration-300 ease-in-out"
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
       >
-        <BiSolidLeftArrow />
+        Previous
       </button>
       <button
-        className="bg-[#369fbd] text-white p-4 rounded-full hover.bg-[#49c8eb] duration-300 ease-in-out"
-        onClick={handleNextPage}
+        className="bg-[#369fbd] text-white px-6 py-2 rounded-xl hover:bg-[#49c8eb] duration-300 ease-in-out"
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
       >
-        <BiSolidRightArrow />
+        Next
       </button>
     </div>
   )
