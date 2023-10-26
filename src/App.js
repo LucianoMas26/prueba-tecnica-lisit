@@ -1,20 +1,33 @@
-import { Route, Routes } from "react-router-dom"
+import { Route, Routes, useLocation } from "react-router-dom"
+import { useState } from "react"
 import { Home } from "./components/Home/Home"
-import { Planets } from "./components/Planets/Planets"
-import { People } from "./components/People/People"
-import { Starships } from "./components/Starships/Starships"
+import { Detail } from "./components/Detail/Detail"
 import Navbar from "./components/Navbar/Navbar"
 
 function App() {
+  const [searchResults, setSearchResults] = useState([])
+  const location = useLocation()
+
+  const handleSearch = (results) => {
+    setSearchResults(results)
+  }
+
+  const isNavbarVisible = location.pathname !== "/detail"
+
   return (
     <div>
-      <Navbar />
+      {isNavbarVisible && <Navbar onSearch={handleSearch} />}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/people" element={<People />} />
-        <Route path="/planets" element={<Planets />} />
-        <Route path="/starships" element={<Starships />} />
-        {/* <Route path="/detail/:detailId" element={<Detail />} */}
+        <Route
+          path="/"
+          element={
+            <Home
+              searchResults={searchResults}
+              setSearchResults={setSearchResults}
+            />
+          }
+        />
+        <Route path="/detail/:detailId" element={<Detail />} />
       </Routes>
     </div>
   )
